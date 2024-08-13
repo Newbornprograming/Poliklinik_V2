@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 09:18 AM
+-- Generation Time: Aug 13, 2024 at 09:35 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `poliklinik-bk`
+-- Database: `poliklinik_bk`
 --
 
 -- --------------------------------------------------------
@@ -46,12 +46,7 @@ INSERT INTO `daftar_poli` (`id`, `id_pasien`, `id_jadwal`, `keluhan`, `no_antria
 (3, 8, 2, 'Contoh', 1, 0),
 (4, 7, 2, 'Saya ada gejala pusing dan mutah selama 2 hari', 2, 0),
 (5, 8, 2, 'Saya ada keluhan sakit mata', 3, 0),
-(6, 10, 3, 'sakit pinggang', 1, 0),
-(7, 10, 3, 'sakit pinggang', 2, 0),
-(8, 11, 3, 'sakit tyenggorokan', 3, 0),
-(9, 13, 7, 'sakit pinggang', 1, 0),
-(10, 13, 7, 'sakit pinggang', 2, 0),
-(11, 14, 7, 'sakit batuk', 3, 0);
+(6, 10, 1, 'batuk', 3, 0);
 
 -- --------------------------------------------------------
 
@@ -104,8 +99,23 @@ INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`, `id_poli`) VALUES
 --
 -- Table structure for table `jadwal_periksa`
 --
--- Error reading structure for table poliklinik-bk.jadwal_periksa: #1932 - Table &#039;poliklinik-bk.jadwal_periksa&#039; doesn&#039;t exist in engine
--- Error reading data for table poliklinik-bk.jadwal_periksa: #1064 - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;FROM `poliklinik-bk`.`jadwal_periksa`&#039; at line 1
+
+CREATE TABLE `jadwal_periksa` (
+  `id` int(11) NOT NULL,
+  `id_dokter` int(11) NOT NULL,
+  `hari` enum('Senin','Selasa','Rabu','Kamis','Jumat','Sabtu') DEFAULT NULL,
+  `jam_mulai` time DEFAULT NULL,
+  `jam_selesai` time DEFAULT NULL,
+  `aktif` enum('Y','T') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `jadwal_periksa`
+--
+
+INSERT INTO `jadwal_periksa` (`id`, `id_dokter`, `hari`, `jam_mulai`, `jam_selesai`, `aktif`) VALUES
+(1, 11, 'Selasa', '07:00:00', '09:00:00', 'T'),
+(2, 11, 'Rabu', '08:30:00', '10:20:00', 'T');
 
 -- --------------------------------------------------------
 
@@ -200,11 +210,7 @@ INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_ktp`, `no_hp`, `no_rm`) VALUES
 (7, 'Coba', 'Coba Bang', '12345', '12345', '202401-001'),
 (8, 'Coba', 'coba', '123456', '123456', '202401-002'),
 (9, 'Adi', 'coba', '123455', '123455', '202401-003'),
-(10, 'adyoif', 'dsvw', '123567', '08125367431', '202406-004'),
-(11, 'vasff', 'sfvasdf', '03838', '08125367431', '202406-005'),
-(12, 'fqdf', 'gwrg', '12234', '09786', '202406-006'),
-(13, 'deny', 'JL Kalicari IVA no.35 RT.05/RW.03 Kelurahan Kalicari, Kecamatan Pedurungan, Kota Semarang', '34548013436', '0976536883', '202406-007'),
-(14, 'wedcdigd', 'uiasgc', '0192830827171', '0983737', '202407-008');
+(10, 'jvllb', 'wrgwrg', '1232445', '09747', '202408-004');
 
 -- --------------------------------------------------------
 
@@ -249,25 +255,6 @@ CREATE TABLE `poli` (
 INSERT INTO `poli` (`id`, `nama_poli`, `keterangan`) VALUES
 (1, 'Poliklinik Satu', 'Sangat murah');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
-
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id`, `username`, `password`) VALUES
-(1, 'admin', '12345');
-
 --
 -- Indexes for dumped tables
 --
@@ -296,6 +283,13 @@ ALTER TABLE `dokter`
   ADD KEY `id_poli` (`id_poli`);
 
 --
+-- Indexes for table `jadwal_periksa`
+--
+ALTER TABLE `jadwal_periksa`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_dokter` (`id_dokter`);
+
+--
 -- Indexes for table `obat`
 --
 ALTER TABLE `obat`
@@ -321,12 +315,6 @@ ALTER TABLE `poli`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -334,7 +322,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `daftar_poli`
 --
 ALTER TABLE `daftar_poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `detail_periksa`
@@ -349,6 +337,12 @@ ALTER TABLE `dokter`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `jadwal_periksa`
+--
+ALTER TABLE `jadwal_periksa`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `obat`
 --
 ALTER TABLE `obat`
@@ -358,7 +352,7 @@ ALTER TABLE `obat`
 -- AUTO_INCREMENT for table `pasien`
 --
 ALTER TABLE `pasien`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `periksa`
@@ -370,12 +364,6 @@ ALTER TABLE `periksa`
 -- AUTO_INCREMENT for table `poli`
 --
 ALTER TABLE `poli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -401,6 +389,12 @@ ALTER TABLE `detail_periksa`
 --
 ALTER TABLE `dokter`
   ADD CONSTRAINT `dokter_ibfk_1` FOREIGN KEY (`id_poli`) REFERENCES `poli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `jadwal_periksa`
+--
+ALTER TABLE `jadwal_periksa`
+  ADD CONSTRAINT `jadwal_periksa_ibfk_1` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `periksa`
